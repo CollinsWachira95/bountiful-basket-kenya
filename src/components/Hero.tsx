@@ -1,5 +1,6 @@
 
 import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
 
 const Hero = () => {
   return (
@@ -16,12 +17,16 @@ const Hero = () => {
                 Experience the finest selection of fresh produce, artisanal goods, and everyday essentials. Proudly Kenyan, globally inspired.
               </p>
               <div className="mt-5 sm:mt-8 sm:flex sm:justify-center lg:justify-start gap-4">
-                <Button className="btn-primary">
-                  Shop Now
-                </Button>
-                <Button className="btn-secondary">
-                  Learn More
-                </Button>
+                <Link to="/products">
+                  <Button className="btn-primary">
+                    Shop Now
+                  </Button>
+                </Link>
+                <Link to="/about">
+                  <Button className="btn-secondary">
+                    Learn More
+                  </Button>
+                </Link>
               </div>
             </div>
           </main>

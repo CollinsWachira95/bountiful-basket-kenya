@@ -1,11 +1,20 @@
 
 import { useState } from "react";
+import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Menu, X, ShoppingCart, Search } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const Navbar = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const location = useLocation();
+
+  // Helper function to determine if a link is active
+  const isActive = (path: string) => {
+    if (path === "/" && location.pathname === "/") return true;
+    if (path !== "/" && location.pathname.startsWith(path)) return true;
+    return false;
+  };
 
   return (
     <div className="bg-white sticky top-0 z-50 shadow-sm">
@@ -13,11 +22,11 @@ const Navbar = () => {
         <div className="flex justify-between items-center py-4 md:justify-start md:space-x-10">
           {/* Logo */}
           <div className="flex justify-start lg:w-0 lg:flex-1">
-            <a href="/" className="flex items-center">
+            <Link to="/" className="flex items-center">
               <span className="font-playfair font-bold text-2xl text-kenya-blue-dark">
                 Bountiful<span className="text-kenya-yellow-dark">Basket</span>
               </span>
-            </a>
+            </Link>
           </div>
 
           {/* Mobile menu button */}
@@ -37,30 +46,34 @@ const Navbar = () => {
 
           {/* Desktop navigation */}
           <nav className="hidden md:flex space-x-10">
-            <a 
-              href="#" 
-              className="text-base font-medium text-gray-700 hover:text-kenya-blue transition-colors"
+            <Link 
+              to="/" 
+              className={cn("text-base font-medium transition-colors", 
+                isActive("/") ? "text-kenya-blue" : "text-gray-700 hover:text-kenya-blue")}
             >
               Home
-            </a>
-            <a 
-              href="#products" 
-              className="text-base font-medium text-gray-700 hover:text-kenya-blue transition-colors"
+            </Link>
+            <Link 
+              to="/products" 
+              className={cn("text-base font-medium transition-colors", 
+                isActive("/products") ? "text-kenya-blue" : "text-gray-700 hover:text-kenya-blue")}
             >
               Products
-            </a>
-            <a 
-              href="#about" 
-              className="text-base font-medium text-gray-700 hover:text-kenya-blue transition-colors"
+            </Link>
+            <Link 
+              to="/about" 
+              className={cn("text-base font-medium transition-colors", 
+                isActive("/about") ? "text-kenya-blue" : "text-gray-700 hover:text-kenya-blue")}
             >
               About Us
-            </a>
-            <a 
-              href="#locations" 
-              className="text-base font-medium text-gray-700 hover:text-kenya-blue transition-colors"
+            </Link>
+            <Link 
+              to="/locations" 
+              className={cn("text-base font-medium transition-colors", 
+                isActive("/locations") ? "text-kenya-blue" : "text-gray-700 hover:text-kenya-blue")}
             >
               Locations
-            </a>
+            </Link>
           </nav>
 
           {/* Desktop right buttons */}
@@ -105,34 +118,34 @@ const Navbar = () => {
             </div>
             <div className="mt-6">
               <nav className="grid gap-y-6">
-                <a
-                  href="#"
+                <Link
+                  to="/"
                   className="-m-3 p-3 flex items-center rounded-md hover:bg-gray-50"
                   onClick={() => setMobileMenuOpen(false)}
                 >
-                  <span className="text-base font-medium text-gray-900">Home</span>
-                </a>
-                <a
-                  href="#products"
+                  <span className={cn("text-base font-medium", isActive("/") ? "text-kenya-blue" : "text-gray-900")}>Home</span>
+                </Link>
+                <Link
+                  to="/products"
                   className="-m-3 p-3 flex items-center rounded-md hover:bg-gray-50"
                   onClick={() => setMobileMenuOpen(false)}
                 >
-                  <span className="text-base font-medium text-gray-900">Products</span>
-                </a>
-                <a
-                  href="#about"
+                  <span className={cn("text-base font-medium", isActive("/products") ? "text-kenya-blue" : "text-gray-900")}>Products</span>
+                </Link>
+                <Link
+                  to="/about"
                   className="-m-3 p-3 flex items-center rounded-md hover:bg-gray-50"
                   onClick={() => setMobileMenuOpen(false)}
                 >
-                  <span className="text-base font-medium text-gray-900">About Us</span>
-                </a>
-                <a
-                  href="#locations"
+                  <span className={cn("text-base font-medium", isActive("/about") ? "text-kenya-blue" : "text-gray-900")}>About Us</span>
+                </Link>
+                <Link
+                  to="/locations"
                   className="-m-3 p-3 flex items-center rounded-md hover:bg-gray-50"
                   onClick={() => setMobileMenuOpen(false)}
                 >
-                  <span className="text-base font-medium text-gray-900">Locations</span>
-                </a>
+                  <span className={cn("text-base font-medium", isActive("/locations") ? "text-kenya-blue" : "text-gray-900")}>Locations</span>
+                </Link>
               </nav>
             </div>
           </div>
