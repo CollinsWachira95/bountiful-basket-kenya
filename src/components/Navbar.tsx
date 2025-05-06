@@ -24,7 +24,7 @@ const Navbar = () => {
           <div className="flex justify-start lg:w-0 lg:flex-1">
             <Link to="/" className="flex items-center">
               <span className="font-playfair font-bold text-2xl text-kenya-blue-dark">
-                Bountiful<span className="text-kenya-yellow-dark">Basket</span>
+                DC<span className="text-kenya-yellow-dark">Supermarket</span>
               </span>
             </Link>
           </div>
@@ -81,9 +81,11 @@ const Navbar = () => {
             <Button variant="ghost" size="icon">
               <Search className="h-5 w-5" />
             </Button>
-            <Button variant="ghost" size="icon">
-              <ShoppingCart className="h-5 w-5" />
-            </Button>
+            <Link to="/cart">
+              <Button variant="ghost" size="icon">
+                <ShoppingCart className="h-5 w-5" />
+              </Button>
+            </Link>
             <Button 
               className="btn-primary"
             >
@@ -103,7 +105,7 @@ const Navbar = () => {
             <div className="flex items-center justify-between">
               <div>
                 <span className="font-playfair font-bold text-xl text-kenya-blue-dark">
-                  Bountiful<span className="text-kenya-yellow-dark">Basket</span>
+                  DC<span className="text-kenya-yellow-dark">Supermarket</span>
                 </span>
               </div>
               <div className="-mr-2">
@@ -154,9 +156,11 @@ const Navbar = () => {
               <Button variant="ghost" size="icon">
                 <Search className="h-5 w-5" />
               </Button>
-              <Button variant="ghost" size="icon">
-                <ShoppingCart className="h-5 w-5" />
-              </Button>
+              <Link to="/cart">
+                <Button variant="ghost" size="icon">
+                  <ShoppingCart className="h-5 w-5" />
+                </Button>
+              </Link>
             </div>
             <Button className="btn-primary w-full">
               Sign In

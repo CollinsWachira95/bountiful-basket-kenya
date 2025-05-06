@@ -13,7 +13,7 @@ const AboutUs = () => {
             <div className="text-center">
               <h1 className="text-4xl tracking-tight font-extrabold text-gray-900 sm:text-5xl md:text-6xl">
                 <span className="block text-kenya-blue-dark">About</span>
-                <span className="block text-kenya-yellow-dark">Bountiful Basket</span>
+                <span className="block text-kenya-yellow-dark">DC Supermarket</span>
               </h1>
               <p className="mt-3 max-w-md mx-auto text-base text-gray-500 sm:text-lg md:text-xl">
                 Learn about our story, mission, and commitment to quality and community.
