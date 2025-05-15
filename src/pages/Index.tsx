@@ -5,18 +5,109 @@ import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import FeaturedProducts from "@/components/FeaturedProducts";
-import { ShieldCheck, Truck, HeartHandshake, Clock } from "lucide-react";
+import { ShieldCheck, Truck, HeartHandshake, Clock, MapPin, CalendarClock, Tag, Sparkles } from "lucide-react";
+import { AspectRatio } from "@/components/ui/aspect-ratio";
 
 const Index = () => {
+  const categories = [
+    { name: "Fresh Produce", image: "https://images.unsplash.com/photo-1610348725531-843dff563e2c?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80", link: "/products" },
+    { name: "Bakery", image: "https://images.unsplash.com/photo-1608198093002-ad4e005484ec?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80", link: "/products" },
+    { name: "Dairy & Eggs", image: "https://images.unsplash.com/photo-1550583724-b2692b85b150?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80", link: "/products" },
+    { name: "Beverages", image: "https://images.unsplash.com/photo-1595981267035-7b04ca84a46d?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80", link: "/products" },
+  ];
+  
+  const promotions = [
+    { title: "Weekend Special", description: "20% off all fresh fruits and vegetables", date: "Every Saturday & Sunday" },
+    { title: "Loyalty Program", description: "Earn points with every purchase", date: "Ongoing" },
+    { title: "Bulk Buying Discount", description: "Save 15% when you buy in bulk", date: "Limited time offer" }
+  ];
+
   return (
     <div className="min-h-screen">
       <Navbar />
       <main>
         <Hero />
         
+        {/* Shop by Category Section */}
+        <section className="py-16 bg-white">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="text-center mb-12">
+              <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">Shop by Category</h2>
+              <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+                Explore our wide range of products organized by category for easy shopping.
+              </p>
+            </div>
+            
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+              {categories.map((category, index) => (
+                <Link key={index} to={category.link} className="group">
+                  <div className="overflow-hidden rounded-lg shadow-md hover:shadow-xl transition-all duration-300">
+                    <AspectRatio ratio={4/3} className="bg-gray-100">
+                      <img 
+                        src={category.image} 
+                        alt={category.name} 
+                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                      />
+                    </AspectRatio>
+                    <div className="p-4 bg-white">
+                      <h3 className="font-bold text-xl text-center group-hover:text-kenya-blue transition-colors">
+                        {category.name}
+                      </h3>
+                    </div>
+                  </div>
+                </Link>
+              ))}
+            </div>
+            
+            <div className="text-center mt-10">
+              <Link to="/products">
+                <Button className="bg-kenya-blue hover:bg-kenya-blue-dark">
+                  View All Categories
+                </Button>
+              </Link>
+            </div>
+          </div>
+        </section>
+        
+        {/* Featured Products Section */}
+        <FeaturedProducts />
+        
+        {/* Special Deals & Promotions */}
+        <section className="bg-gray-50 py-16">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="text-center mb-12">
+              <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">Special Offers</h2>
+              <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+                Don't miss out on our current promotions and special deals.
+              </p>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              {promotions.map((promo, index) => (
+                <div key={index} className="bg-white rounded-lg shadow-md p-6 hover:shadow-xl transition-shadow">
+                  <div className="flex justify-center mb-4">
+                    <div className="p-3 bg-kenya-yellow-light rounded-full">
+                      {index === 0 ? (
+                        <Tag className="h-8 w-8 text-kenya-yellow-dark" />
+                      ) : index === 1 ? (
+                        <Sparkles className="h-8 w-8 text-kenya-yellow-dark" />
+                      ) : (
+                        <CalendarClock className="h-8 w-8 text-kenya-yellow-dark" />
+                      )}
+                    </div>
+                  </div>
+                  <h3 className="text-xl font-bold text-center mb-2">{promo.title}</h3>
+                  <p className="text-gray-600 text-center mb-4">{promo.description}</p>
+                  <p className="text-sm text-gray-500 text-center font-medium">{promo.date}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+        
         {/* Features Section */}
         <div className="bg-white py-16">
-          <div className="section-container">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-12">
               <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">Why Choose DC Supermarket</h2>
               <p className="text-lg text-gray-600 max-w-2xl mx-auto">
@@ -24,7 +115,7 @@ const Index = () => {
               </p>
             </div>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-6xl mx-auto">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
               <div className="flex flex-col items-center text-center">
                 <div className="bg-kenya-blue-light p-4 rounded-full mb-4">
                   <ShieldCheck className="h-8 w-8 text-kenya-blue" />
@@ -60,47 +151,51 @@ const Index = () => {
           </div>
         </div>
 
-        {/* Featured Products Section */}
-        <FeaturedProducts />
-        
-        <div className="section-container bg-gray-50">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">Welcome to DC Supermarket</h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              Experience the finest selection of premium products, fresh produce, and everyday essentials at Kenya's premier supermarket.
-            </p>
+        {/* Store Locator Preview */}
+        <section className="bg-gray-100 py-16">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+              <div>
+                <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-6">Find a DC Supermarket Near You</h2>
+                <p className="text-lg text-gray-600 mb-8">
+                  We have multiple locations across Kenya to serve you better. Visit our modern, well-stocked stores for an exceptional shopping experience.
+                </p>
+                <div className="space-y-4 mb-8">
+                  <div className="flex items-start">
+                    <MapPin className="h-6 w-6 text-kenya-blue mt-1 mr-2 flex-shrink-0" />
+                    <div>
+                      <h4 className="font-bold text-lg">Westlands Branch</h4>
+                      <p className="text-gray-600">123 Waiyaki Way, Westlands, Nairobi</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start">
+                    <MapPin className="h-6 w-6 text-kenya-blue mt-1 mr-2 flex-shrink-0" />
+                    <div>
+                      <h4 className="font-bold text-lg">Karen Branch</h4>
+                      <p className="text-gray-600">Karen Shopping Center, Langata Road, Nairobi</p>
+                    </div>
+                  </div>
+                </div>
+                <Link to="/locations">
+                  <Button className="bg-kenya-blue hover:bg-kenya-blue-dark">
+                    View All Locations
+                  </Button>
+                </Link>
+              </div>
+              <div className="rounded-lg overflow-hidden shadow-lg">
+                <img 
+                  src="https://images.unsplash.com/photo-1604719312566-8912e9227c6a?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" 
+                  alt="DC Supermarket Store" 
+                  className="w-full h-full object-cover"
+                />
+              </div>
+            </div>
           </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-            <div className="bg-white rounded-lg shadow-lg p-6 text-center hover:shadow-xl transition-shadow">
-              <h3 className="text-xl font-bold text-kenya-blue-dark mb-4">Our Products</h3>
-              <p className="text-gray-600 mb-6">Discover our carefully curated selection of local and imported goods.</p>
-              <Link to="/products">
-                <Button className="btn-primary">Browse Products</Button>
-              </Link>
-            </div>
-            
-            <div className="bg-white rounded-lg shadow-lg p-6 text-center hover:shadow-xl transition-shadow">
-              <h3 className="text-xl font-bold text-kenya-blue-dark mb-4">About Us</h3>
-              <p className="text-gray-600 mb-6">Learn about our history, mission, and commitment to the Kenyan community.</p>
-              <Link to="/about">
-                <Button className="btn-primary">Our Story</Button>
-              </Link>
-            </div>
-            
-            <div className="bg-white rounded-lg shadow-lg p-6 text-center hover:shadow-xl transition-shadow">
-              <h3 className="text-xl font-bold text-kenya-blue-dark mb-4">Find Us</h3>
-              <p className="text-gray-600 mb-6">Locate our stores across Kenya and visit us for an exceptional shopping experience.</p>
-              <Link to="/locations">
-                <Button className="btn-primary">Store Locations</Button>
-              </Link>
-            </div>
-          </div>
-        </div>
+        </section>
 
         {/* Testimonials Section */}
         <div className="bg-white py-16">
-          <div className="section-container">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-12">
               <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">What Our Customers Say</h2>
               <p className="text-lg text-gray-600 max-w-2xl mx-auto">
@@ -108,7 +203,7 @@ const Index = () => {
               </p>
             </div>
             
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               <div className="bg-gray-50 p-6 rounded-lg shadow">
                 <div className="flex items-center mb-4">
                   <div className="w-12 h-12 bg-gray-300 rounded-full overflow-hidden">
@@ -153,7 +248,7 @@ const Index = () => {
 
         {/* Newsletter Section */}
         <div className="bg-kenya-blue py-16">
-          <div className="section-container">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="max-w-3xl mx-auto text-center text-white">
               <h2 className="text-3xl font-bold mb-4">Stay Updated</h2>
               <p className="mb-8">Subscribe to our newsletter for weekly updates on promotions, new products, and recipes.</p>
