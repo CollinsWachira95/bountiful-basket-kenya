@@ -5,10 +5,11 @@ import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { ShoppingCart, Trash2, Plus, Minus } from "lucide-react";
 import { Link } from "react-router-dom";
+import {SignInButton, useUser} from "@clerk/clerk-react";
 
 const Cart = () => {
   const { items, removeFromCart, updateQuantity, getTotalItems, getTotalPrice } = useCartStore();
-
+  const {isSignedIn} = useUser()
   if (items.length === 0) {
     return (
       <div className="min-h-screen">
@@ -117,12 +118,21 @@ const Cart = () => {
                 <span>Total</span>
                 <span>KSh {(getTotalPrice() + 250).toLocaleString()}</span>
               </div>
-              
+              {isSignedIn ? (
               <Link to="/checkout">
                 <Button className="w-full bg-kenya-blue hover:bg-kenya-blue-dark font-medium">
                   Proceed to Checkout
                 </Button>
               </Link>
+              ): (
+                  <SignInButton>
+                    <Button className="w-full bg-kenya-blue hover:bg-kenya-blue-dark font-medium">
+                      Before We proceed, Please sign in.
+                    </Button>
+                  </SignInButton>
+              )}
+
+
             </div>
           </div>
         </div>

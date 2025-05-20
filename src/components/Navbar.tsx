@@ -166,10 +166,21 @@ const Navbar = () => {
                   <ShoppingCart className="h-5 w-5" />
                 </Button>
               </Link>
+              {
+                isSignedIn  &&(
+                    <div className={'flex w-full justify-end'}>
+              <UserButton/>
+                    </div>
+                  )
+              }
             </div>
+            {isSignedIn ? "": (
+                <SignInButton>
             <Button className="btn-primary w-full">
               Sign In
             </Button>
+                </SignInButton>
+            )}
           </div>
         </div>
       </div>
