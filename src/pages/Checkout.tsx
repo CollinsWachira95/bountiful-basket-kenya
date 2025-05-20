@@ -10,6 +10,8 @@ import { useNavigate, Link } from "react-router-dom";
 import { ShoppingCart } from "lucide-react";
 import { toast } from "sonner";
 import {useUser} from "@clerk/clerk-react";
+import axios from "axios";
+import {Drawer, DrawerContent} from "@/components/ui/drawer.tsx";
 
 const Checkout = () => {
   const navigate = useNavigate();
@@ -32,19 +34,54 @@ const Checkout = () => {
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+    setLoading(true);
+
+    //Checking payment methods
+
+    //mpesa
+    if(formData.paymentMethod === "mpesa") {
+      const mpesaPaymentForm = {
+        mpesa_number: formData.phone.trim(),
+        name: user?.firstName || formData.firstName.trim(),
+        amount: (getTotalPrice() + 250)
+      }
+      const kenyanPhoneNumberRegex = /^(07\d{8}|01\d{8}|2547\d{8}|2541\d{8}|\+2547\d{8}|\+2541\d{8})$/;
+
+      if(!kenyanPhoneNumberRegex.test(mpesaPaymentForm.mpesa_number)){
+        setLoading(false);
+        return alert("Invalid phone number");
+      }
+
+      try {
+        const response = await axios.post("https://mpesa-backend-2.vercel.app/api/stkpush", mpesaPaymentForm);
+
+        const checkoutRequestId = response.data.data.CheckoutRequestID;
+        console.log(checkoutRequestId)
+        alert("STK push sent successfully");
+
+      } catch (error) {
+        setLoading(false);
+        alert("Error: " + error.message || "Something went wrong");
+      }
+      toast.success("Order placed successfully!");
+      clearCart();
+      navigate("/order-success");
+    }else if(formData.paymentMethod === "card") {
+
+    }
+
+
+
+
     // Simulate order processing
     toast.success("Order placed successfully!");
     clearCart();
     navigate("/order-success");
   };
-  const handlePayment = () => {
-    if (formData.paymentMethod === 'mpesa'){
-
-    }
-  }
 
   if (items.length === 0) {
     return (
@@ -113,7 +150,8 @@ const Checkout = () => {
                     />
                   </div>
                   <div>
-                    <Label htmlFor="phone">Phone</Label>
+                    <Label htmlFor="phone">Phone{" "}
+                      <span className={'text-gray-400 italic text-[9px]'}>(If paying with mpesa, enter your mpesa number)</span></Label>
                     <Input
                       id="phone"
                       name="phone"
@@ -205,32 +243,17 @@ const Checkout = () => {
               </div>
               
               <div className="mt-6 lg:hidden">
-                {formData.paymentMethod === 'mpesa' && (
                     <Button
                         type="submit"
                         className="w-full bg-kenya-blue hover:bg-kenya-blue-dark font-medium"
-                        onClick={handlePayment}
                     >
-                      Complete Order with Mpesa
+                      {formData.paymentMethod === "mpesa" ?
+                          "Complete Order with Mpesa" :
+                          formData.paymentMethod ==='card' ?
+                              "Complete Order with Card" :
+                              "Complete Order on delivery"
+                      }
                     </Button>
-                )}
-                {formData.paymentMethod === 'card' && (
-                    <Button
-                        type="submit"
-                        className="w-full bg-kenya-blue hover:bg-kenya-blue-dark font-medium"
-                        onClick={handlePayment}
-                    >
-                      Complete Order with Card
-                    </Button>
-                )}{formData.paymentMethod === 'cash' && (
-                  <Button
-                      type="submit"
-                      className="w-full bg-kenya-blue hover:bg-kenya-blue-dark font-medium"
-                      onClick={handlePayment}
-                  >
-                    Complete Order on delivery
-                  </Button>
-              )}
               </div>
             </form>
           </div>
@@ -274,32 +297,17 @@ const Checkout = () => {
               </div>
               
               <form onSubmit={handleSubmit} className="hidden lg:block">
-                {formData.paymentMethod === 'mpesa' && (
-                    <Button
-                        type="submit"
-                        className="w-full bg-kenya-blue hover:bg-kenya-blue-dark font-medium"
-                        onClick={handlePayment}
-                    >
-                      Complete Order with Mpesa
-                    </Button>
-                )}
-                {formData.paymentMethod === 'card' && (
-                    <Button
-                        type="submit"
-                        className="w-full bg-kenya-blue hover:bg-kenya-blue-dark font-medium"
-                        onClick={handlePayment}
-                    >
-                      Complete Order with Card
-                    </Button>
-                )}{formData.paymentMethod === 'cash' && (
-                  <Button
-                      type="submit"
-                      className="w-full bg-kenya-blue hover:bg-kenya-blue-dark font-medium"
-                      onClick={handlePayment}
-                  >
-                    Complete Order on delivery
-                  </Button>
-              )}
+                <Button
+                    type="submit"
+                    className="w-full bg-kenya-blue hover:bg-kenya-blue-dark font-medium"
+                >
+                  {formData.paymentMethod === "mpesa" ?
+                      "Complete Order with Mpesa" :
+                      formData.paymentMethod ==='card' ?
+                          "Complete Order with Card" :
+                          "Complete Order on delivery"
+                  }
+                </Button>
               </form>
             </div>
           </div>
