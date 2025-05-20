@@ -1,13 +1,15 @@
 
 import { useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import {Link, redirect, useLocation} from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Menu, X, ShoppingCart, Search } from "lucide-react";
 import { cn } from "@/lib/utils";
+import {SignInButton, UserButton, useUser} from "@clerk/clerk-react";
 
 const Navbar = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const location = useLocation();
+  const {isSignedIn} = useUser()
 
   // Helper function to determine if a link is active
   const isActive = (path: string) => {
@@ -86,11 +88,14 @@ const Navbar = () => {
                 <ShoppingCart className="h-5 w-5" />
               </Button>
             </Link>
-            <Button 
-              className="btn-primary"
-            >
-              Sign In
-            </Button>
+            {isSignedIn ? (<UserButton/>) : (
+                <SignInButton>
+                  <Button className={'btn-primary'}>
+                    Sign In
+                  </Button>
+                </SignInButton>
+            )}
+
           </div>
         </div>
       </div>
