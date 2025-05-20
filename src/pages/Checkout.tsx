@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { useCartStore } from "@/stores/cartStore";
@@ -11,7 +11,7 @@ import { ShoppingCart } from "lucide-react";
 import { toast } from "sonner";
 import {useUser} from "@clerk/clerk-react";
 import axios from "axios";
-import {Drawer, DrawerContent} from "@/components/ui/drawer.tsx";
+import {loadStripe} from '@stripe/stripe-js'
 
 const Checkout = () => {
   const navigate = useNavigate();
@@ -34,7 +34,21 @@ const Checkout = () => {
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
+
   const [loading, setLoading] = useState(false);
+
+  //Stripe works
+  const STRIPE_BACKEND_URL = "https://stripe-backend-main.vercel.app";
+  const [stripePromise, setStripePromise] = useState(null);
+
+
+  useEffect(() => {
+    fetch(`${STRIPE_BACKEND_URL}/config`).then (async (r) => {
+      const {publishableKey} = await r.json();
+
+      console.log(publishableKey);
+    })
+  },[])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
