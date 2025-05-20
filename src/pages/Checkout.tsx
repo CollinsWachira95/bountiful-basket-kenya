@@ -9,10 +9,12 @@ import { Label } from "@/components/ui/label";
 import { useNavigate, Link } from "react-router-dom";
 import { ShoppingCart } from "lucide-react";
 import { toast } from "sonner";
+import {useUser} from "@clerk/clerk-react";
 
 const Checkout = () => {
   const navigate = useNavigate();
   const { items, getTotalItems, getTotalPrice, clearCart } = useCartStore();
+  const {user} = useUser()
   
   const [formData, setFormData] = useState({
     firstName: "",
@@ -22,7 +24,7 @@ const Checkout = () => {
     address: "",
     city: "",
     zipCode: "",
-    paymentMethod: "mpesa"
+    paymentMethod: ""
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -38,6 +40,11 @@ const Checkout = () => {
     clearCart();
     navigate("/order-success");
   };
+  const handlePayment = () => {
+    if (formData.paymentMethod === 'mpesa'){
+
+    }
+  }
 
   if (items.length === 0) {
     return (
@@ -77,7 +84,7 @@ const Checkout = () => {
                     <Input
                       id="firstName"
                       name="firstName"
-                      value={formData.firstName}
+                      value={user?.firstName || formData.firstName}
                       onChange={handleChange}
                       required
                     />
@@ -87,7 +94,7 @@ const Checkout = () => {
                     <Input
                       id="lastName"
                       name="lastName"
-                      value={formData.lastName}
+                      value={user?.lastName || formData.lastName}
                       onChange={handleChange}
                       required
                     />
@@ -100,7 +107,7 @@ const Checkout = () => {
                       id="email"
                       name="email"
                       type="email"
-                      value={formData.email}
+                      value={user?.emailAddresses[0].emailAddress || formData.email}
                       onChange={handleChange}
                       required
                     />
@@ -198,12 +205,32 @@ const Checkout = () => {
               </div>
               
               <div className="mt-6 lg:hidden">
-                <Button
-                  type="submit"
-                  className="w-full bg-kenya-blue hover:bg-kenya-blue-dark font-medium"
-                >
-                  Complete Order
-                </Button>
+                {formData.paymentMethod === 'mpesa' && (
+                    <Button
+                        type="submit"
+                        className="w-full bg-kenya-blue hover:bg-kenya-blue-dark font-medium"
+                        onClick={handlePayment}
+                    >
+                      Complete Order with Mpesa
+                    </Button>
+                )}
+                {formData.paymentMethod === 'card' && (
+                    <Button
+                        type="submit"
+                        className="w-full bg-kenya-blue hover:bg-kenya-blue-dark font-medium"
+                        onClick={handlePayment}
+                    >
+                      Complete Order with Card
+                    </Button>
+                )}{formData.paymentMethod === 'cash' && (
+                  <Button
+                      type="submit"
+                      className="w-full bg-kenya-blue hover:bg-kenya-blue-dark font-medium"
+                      onClick={handlePayment}
+                  >
+                    Complete Order on delivery
+                  </Button>
+              )}
               </div>
             </form>
           </div>
@@ -247,12 +274,32 @@ const Checkout = () => {
               </div>
               
               <form onSubmit={handleSubmit} className="hidden lg:block">
-                <Button
-                  type="submit"
-                  className="w-full bg-kenya-blue hover:bg-kenya-blue-dark font-medium"
-                >
-                  Complete Order
-                </Button>
+                {formData.paymentMethod === 'mpesa' && (
+                    <Button
+                        type="submit"
+                        className="w-full bg-kenya-blue hover:bg-kenya-blue-dark font-medium"
+                        onClick={handlePayment}
+                    >
+                      Complete Order with Mpesa
+                    </Button>
+                )}
+                {formData.paymentMethod === 'card' && (
+                    <Button
+                        type="submit"
+                        className="w-full bg-kenya-blue hover:bg-kenya-blue-dark font-medium"
+                        onClick={handlePayment}
+                    >
+                      Complete Order with Card
+                    </Button>
+                )}{formData.paymentMethod === 'cash' && (
+                  <Button
+                      type="submit"
+                      className="w-full bg-kenya-blue hover:bg-kenya-blue-dark font-medium"
+                      onClick={handlePayment}
+                  >
+                    Complete Order on delivery
+                  </Button>
+              )}
               </form>
             </div>
           </div>
