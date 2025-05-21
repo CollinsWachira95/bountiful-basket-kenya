@@ -11,7 +11,9 @@ import { ShoppingCart } from "lucide-react";
 import { toast } from "sonner";
 import {useUser} from "@clerk/clerk-react";
 import axios from "axios";
-import {loadStripe} from '@stripe/stripe-js'
+import {loadStripe} from "@stripe/stripe-js";
+import StripePaymentForm from "@/components/StripePaymentForm.tsx";
+import {Elements} from "@stripe/react-stripe-js";
 
 const Checkout = () => {
   const navigate = useNavigate();
@@ -38,7 +40,7 @@ const Checkout = () => {
   const [loading, setLoading] = useState(false);
 
   //Stripe works
-  const STRIPE_BACKEND_URL = "http://localhost:5252";
+  const STRIPE_BACKEND_URL = "https://stripe-backend-main.vercel.app";
   const [stripePromise, setStripePromise] = useState(null);
   const [clientSecret, setClientSecret] = useState("");
 
@@ -47,7 +49,7 @@ const Checkout = () => {
     fetch(`${STRIPE_BACKEND_URL}/config`).then (async (r) => {
       const {publishableKey} = await r.json();
 
-      setStripePromise(publishableKey);
+      setStripePromise(loadStripe(publishableKey));
     })
   },[])
 
@@ -101,8 +103,6 @@ const Checkout = () => {
       toast.success("Order placed successfully!");
       clearCart();
       navigate("/order-success");
-    }else if(formData.paymentMethod === "card") {
-      return;
     }
 
 
@@ -280,8 +280,6 @@ const Checkout = () => {
                     >
                       {formData.paymentMethod === "mpesa" ?
                           "Complete Order with Mpesa" :
-                          formData.paymentMethod ==='card' ?
-                              "Complete Order with Card" :
                               "Complete Order on delivery"
                       }
                     </Button>
@@ -292,7 +290,13 @@ const Checkout = () => {
 
           {formData.paymentMethod === "card" ?(
               <div className="bg-white rounded-lg shadow-lg p-6 h-fit lg:sticky lg:top-20">
-
+                {
+                  stripePromise && clientSecret && (
+                        <Elements stripe={stripePromise} options={{ clientSecret }}>
+                          <StripePaymentForm/>
+                        </Elements>
+                    )
+                }
               </div>
               ):(
           <div className="bg-white rounded-lg shadow-lg p-6 h-fit lg:sticky lg:top-20">
