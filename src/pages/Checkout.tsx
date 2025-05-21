@@ -38,17 +38,34 @@ const Checkout = () => {
   const [loading, setLoading] = useState(false);
 
   //Stripe works
-  const STRIPE_BACKEND_URL = "https://stripe-backend-main.vercel.app";
+  const STRIPE_BACKEND_URL = "http://localhost:5252";
   const [stripePromise, setStripePromise] = useState(null);
+  const [clientSecret, setClientSecret] = useState("");
 
 
   useEffect(() => {
     fetch(`${STRIPE_BACKEND_URL}/config`).then (async (r) => {
       const {publishableKey} = await r.json();
 
-      console.log(publishableKey);
+      setStripePromise(publishableKey);
     })
   },[])
+
+  useEffect(() => {
+    fetch(`${STRIPE_BACKEND_URL}/create-payment-intent`,{
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ amount: Math.round((getTotalPrice() + 250) * 100) })
+    }).then (async (r) => {
+      const {clientSecret} = await r.json();
+
+      setClientSecret(clientSecret)
+    })
+  },[getTotalPrice])
+
+
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -85,7 +102,7 @@ const Checkout = () => {
       clearCart();
       navigate("/order-success");
     }else if(formData.paymentMethod === "card") {
-
+      return;
     }
 
 
@@ -271,10 +288,15 @@ const Checkout = () => {
               </div>
             </form>
           </div>
-          
+
+
+          {formData.paymentMethod === "card" ?(
+              <div className="bg-white rounded-lg shadow-lg p-6 h-fit lg:sticky lg:top-20">
+
+              </div>
+              ):(
           <div className="bg-white rounded-lg shadow-lg p-6 h-fit lg:sticky lg:top-20">
             <h2 className="text-xl font-bold text-gray-900 mb-4">Order Summary</h2>
-            
             <div className="max-h-80 overflow-y-auto mb-4">
               {items.map(item => (
                 <div key={item.product.id} className="flex py-2 border-b">
@@ -295,7 +317,7 @@ const Checkout = () => {
                 </div>
               ))}
             </div>
-            
+
             <div className="space-y-4">
               <div className="flex justify-between">
                 <span className="text-gray-600">Items ({getTotalItems()})</span>
@@ -309,7 +331,7 @@ const Checkout = () => {
                 <span>Total</span>
                 <span>KSh {(getTotalPrice() + 250).toLocaleString()}</span>
               </div>
-              
+
               <form onSubmit={handleSubmit} className="hidden lg:block">
                 <Button
                     type="submit"
@@ -325,6 +347,7 @@ const Checkout = () => {
               </form>
             </div>
           </div>
+          )}
         </div>
       </main>
       <Footer />
